@@ -1,0 +1,50 @@
+#
+# MMC subsystem configuration
+#
+
+menuconfig MMC
+	tristate "MMC/SD/SDIO card support"
+	depends on HAS_IOMEM
+	help
+	  This selects MultiMediaCard, Secure Digital and Secure
+	  Digital I/O support.
+
+	  If you want MMC/SD/SDIO support, you should say Y here and
+	  also to your specific host controller driver.
+
+config MMC_DEBUG
+	bool "MMC debugging"
+	depends on MMC != n
+	help
+	  This is an option for use by developers; most people should
+	  say N here.  This enables MMC core and driver debugging.
+
+config MMC_PERF_PROFILING
+	bool "MMC performance profiling"
+	depends on MMC != n
+	default n
+	help
+	  If you say Y here, support will be added for collecting
+	  performance numbers at the MMC Queue and Host layers.
+
+# LGE_UPDATE_START
+# This is only for D1LV(VS930, Samsung Crappy-eMMC)
+# When we use BKOPS, Samsung eMMC is corrupted.
+# So, LGE disable BKOPS for only D1LV(VS930)
+# 2012-11-15, warkap.seo@lge.com
+config LGE_MMC_BKOPS_DISABLE
+	bool "Disable eMMC's BKOPS"
+	depends on MMC != n
+	help
+	  If you say Y here, eMMC will not use BKOPS.
+# LGE_UPDATE_END
+
+if MMC
+
+source "drivers/mmc/core/Kconfig"
+
+source "drivers/mmc/card/Kconfig"
+
+source "drivers/mmc/host/Kconfig"
+
+endif # MMC
